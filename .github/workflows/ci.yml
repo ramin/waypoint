@@ -1,0 +1,18 @@
+name: CI and Release
+on:
+  merge_group:
+  push:
+    branches:
+      - main
+    # Trigger on version tags
+    tags:
+      - "v*"
+  pull_request:
+
+jobs:
+  go:
+    uses: ./.github/workflows/go-ci.yml
+
+  publish:
+    depends-on: go
+    uses: ./.github/workflows/publish.yml

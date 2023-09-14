@@ -1,0 +1,51 @@
+package verifier
+
+import (
+	"context"
+	"fmt"
+	"time"
+
+	"github.com/celestiaorg/celestia-node/share"
+	"github.com/ramin/waypoint/config"
+)
+
+func (v *Verifier) StartReader(ctx context.Context) {
+	ticker := time.NewTicker(config.Read().ReadInterval)
+
+	defer ticker.Stop()
+
+	for {
+		select {
+		case <-ticker.C:
+			go v.verifyRecords()
+		case <-ctx.Done():
+			return
+		case <-v.done: // listen to the done channel for termination
+			return
+		}
+	}
+}
+
+func (v *Verifier) verifyRecords() {
+	fmt.Println("verifying records")
+
+	for height, log := range v.History.Logs {
+		// verify what errors come from here
+		_, err := v.rpc.Blob.GetAll(
+			context.Background(),
+			log.BlockHeight,
+			[]share.Namespace{log.Namespace},
+		)
+
+		// assume we'll need to swtich on error type here
+		if err != nil {
+			v.Metrics.Errors.Add(context.Background(), 1)
+			v.Metrics.Misses.Add(context.Background(), 1)
+			v.errCh <- err
+		} else {
+			v.Metrics.Reads.Add(context.Background(), 1)
+		}
+
+		delete(v.History.Logs, height)
+	}
+}
