@@ -58,7 +58,7 @@ func (v *Verifier) WriteToBlock(ctx context.Context, height int64) int64 {
 		v.Metrics.Errors.Add(ctx, 1)
 	}
 
-	writeHeight, err := v.rpc.Blob.Submit(ctx, []*blob.Blob{writeBlob})
+	writeHeight, err := v.rpc.Blob.Submit(ctx, []*blob.Blob{writeBlob}, nil)
 	if err != nil {
 		v.errCh <- err
 		v.Metrics.Errors.Add(ctx, 1)
