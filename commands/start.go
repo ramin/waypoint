@@ -21,18 +21,32 @@ var StartCmd = &cobra.Command{
 	Use: "start",
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("waypoint")
+		cfg := config.Read()
 
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
 
-		verifier, err := verifier.NewVerifier(ctx)
+		v, err := verifier.NewVerifier(ctx)
 		if err != nil {
 			panic(err)
 		}
 
-		go verifier.Start(ctx)
+		rpc, err := client.NewClient(
+			ctx,
+			"http://0.0.0.0:26658",
+			cfg.JWT,
+		)
+		if err != nil {
+			panic(err)
+		}
 
-		<-startServer()
+		fmt.Println(cfg.JWT)
+
+		v.AddClient(rpc)
+
+		go v.Start(ctx)
+
+		<-startServer(ctx)
 	},
 }
 
@@ -47,7 +61,7 @@ func newClient(ctx context.Context) (*client.Client, error) {
 	)
 }
 
-func startServer() chan bool {
+func startServer(ctx context.Context) chan bool {
 	srv := server.NewServer()
 
 	signal.Notify(srv.Close, os.Interrupt, syscall.SIGTERM, syscall.SIGINT)

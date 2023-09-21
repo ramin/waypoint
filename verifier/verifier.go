@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/celestiaorg/celestia-node/api/rpc/client"
+	"github.com/ramin/waypoint/config"
 )
 
 type Verifier struct {
@@ -50,7 +51,31 @@ func NewVerifier(ctx context.Context) (*Verifier, error) {
 	}, nil
 }
 
-func (v *Verifier) WithClient(c *client.Client) *Verifier {
+func NewVerifierWithClient(ctx context.Context) (*Verifier, error) {
+	v, err := NewVerifier(ctx)
+	if err != nil {
+		return nil, err
+	}
+	v = v.WithClient(ctx)
+	return v, nil
+}
+
+func (v *Verifier) WithClient(ctx context.Context) *Verifier {
+	cfg := config.Read()
+	// by default, celestia-nodes run RPC on port 26658
+	rpc, err := client.NewClient(
+		ctx,
+		"http://0.0.0.0:26658", // https://docs.celestia.org/nodes/arabica-devnet/#rpc-endpoints
+		cfg.JWT,
+	)
+	if err != nil {
+		panic(err)
+	}
+
+	return v.AddClient(rpc)
+}
+
+func (v *Verifier) AddClient(c *client.Client) *Verifier {
 	v.rpc = c
 	return v
 }

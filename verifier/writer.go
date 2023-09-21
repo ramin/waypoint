@@ -17,6 +17,7 @@ func (v *Verifier) StartWriter(ctx context.Context) {
 			default:
 				for height := range v.AwaitBlock(ctx) {
 					go v.WriteToBlock(ctx, height)
+					// fmt.Println(height)
 				}
 			case <-v.sig:
 				fmt.Println("Received shutdown signal")
@@ -51,6 +52,7 @@ func (v *Verifier) AwaitBlock(ctx context.Context) chan int64 {
 
 func (v *Verifier) WriteToBlock(ctx context.Context, height int64) int64 {
 	fmt.Println("awaiting block and writing new data")
+	fmt.Println(height)
 
 	writeBlob, err := generator.NewBlob()
 	if err != nil {
@@ -61,10 +63,10 @@ func (v *Verifier) WriteToBlock(ctx context.Context, height int64) int64 {
 	writeHeight, err := v.rpc.Blob.Submit(ctx, []*blob.Blob{writeBlob}, nil)
 	if err != nil {
 		v.errCh <- err
-		v.Metrics.Errors.Add(ctx, 1)
+		// v.Metrics.Errors.Add(ctx, 1)
 	}
 
-	logrus.Info("wrote blob to block", writeHeight)
+	logrus.Info("wrote blob to block ", writeHeight)
 
 	// stick it in the history
 	// to verify later

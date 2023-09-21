@@ -27,6 +27,6 @@ var RunCmd = &cobra.Command{
 
 		fmt.Println(header)
 
-		<-startServer()
+		<-startServer(context.Background())
 	},
 }

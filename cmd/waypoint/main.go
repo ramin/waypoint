@@ -22,9 +22,11 @@ func init() {
 
 	waypoint.Flags().StringVar(&address, "address", "", "Address to use")
 	waypoint.Flags().StringVar(&p2pNetwork, "p2p.network", "", "P2P network to connect to")
-	waypoint.Flags().StringVar(&jwt, "jwt", "poop", "JWT token")
+	waypoint.Flags().StringVar(&jwt, "jwt", "", "JWT token")
 
-	config.Read().JWT = jwt
+	if jwt != "" {
+		config.Read().JWT = jwt
+	}
 
 	level := os.Getenv("LOG_LEVEL")
 

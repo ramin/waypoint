@@ -31,6 +31,11 @@ type Config struct {
 	Namespace    string        `mapstructure:"namespace"`
 	ReadInterval time.Duration `mapstructure:"readInterval"`
 
+	// an internal with which to output some debug data
+	// about the running processes
+	LogInterval time.Duration `mapstructure:"readInterval"`
+	DisplayInfo bool          `mapstructure:"displayInfo"`
+
 	Meter string `mapstructure:"meter"`
 
 	Host string `mapstructure:"host"`
@@ -61,17 +66,20 @@ func Read() *Config {
 		viper.SetDefault("listen", "0.0.0.0:8080")
 		viper.SetDefault("meter", DefaultMeter)
 		viper.SetDefault("readInterval", DefaultReadInterval)
+		viper.SetDefault("infoInterval", DefaultInfoInterval)
 
 		_ = viper.BindEnv("jwt", "JWT")
 
 		_ = viper.BindEnv("blocks", "BLOCKS")
 		_ = viper.BindEnv("delay", "DELAY")
 		_ = viper.BindEnv("readInterval", "READ_INTERNAL")
+		_ = viper.BindEnv("infoInterval", "INFO_INTERNAL")
 		_ = viper.BindEnv("host", "HOST")
 		_ = viper.BindEnv("port", "PORT")
 		_ = viper.BindEnv("namespace", "NAMESPACE")
 		_ = viper.BindEnv("listen", "LISTEN")
 		_ = viper.BindEnv("meter", "METER")
+		_ = viper.BindEnv("displayInfo", "DISPLAY_INFO")
 
 		_ = viper.BindEnv("verbosity", "VERBOSITY")
 		_ = viper.BindEnv("logFormatter", "LOG_FORMATTER")
