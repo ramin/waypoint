@@ -3,9 +3,9 @@ package verifier
 import (
 	"context"
 	"fmt"
-	"time"
 
 	"github.com/celestiaorg/celestia-node/blob"
+	"github.com/celestiaorg/celestia-node/header"
 	"github.com/ramin/waypoint/generator"
 	"github.com/sirupsen/logrus"
 )
@@ -15,8 +15,8 @@ func (v *Verifier) StartWriter(ctx context.Context) {
 		for {
 			select {
 			default:
-				for height := range v.AwaitBlock(ctx) {
-					go v.WriteToBlock(ctx, height)
+				for header := range v.AwaitBlock(ctx) {
+					go v.WriteToBlock(ctx, header.Height())
 					// fmt.Println(height)
 				}
 			case <-v.sig:
@@ -32,25 +32,20 @@ func (v *Verifier) StartWriter(ctx context.Context) {
 	}()
 }
 
-func (v *Verifier) AwaitBlock(ctx context.Context) chan int64 {
+func (v *Verifier) AwaitBlock(ctx context.Context) <-chan *header.ExtendedHeader {
 	fmt.Println("awaiting block and writing new data")
 
-	time.Sleep(time.Second * 2)
-
-	heights := make(chan int64)
-
-	go func() {
-		for {
-			heights <- 0
-
-			time.Sleep(time.Second * 10)
-		}
-	}()
+	heights, err := v.rpc.Header.Subscribe(ctx)
+	if err != nil {
+		v.errCh <- err
+		v.Metrics.Errors.Add(ctx, 1)
+		panic(err)
+	}
 
 	return heights
 }
 
-func (v *Verifier) WriteToBlock(ctx context.Context, height int64) int64 {
+func (v *Verifier) WriteToBlock(ctx context.Context, height uint64) uint64 {
 	fmt.Println("awaiting block and writing new data")
 	fmt.Println(height)
 
@@ -77,5 +72,5 @@ func (v *Verifier) WriteToBlock(ctx context.Context, height int64) int64 {
 		Data:        writeBlob.Data,
 	}
 
-	return 0
+	return writeHeight
 }
