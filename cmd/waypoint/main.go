@@ -7,11 +7,24 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/ramin/waypoint/commands"
+	"github.com/ramin/waypoint/config"
+)
+
+var (
+	address    string
+	p2pNetwork string
+	jwt        string
 )
 
 func init() {
 	log.SetOutput(os.Stdout)
 	log.SetFormatter(formatter())
+
+	waypoint.Flags().StringVar(&address, "address", "", "Address to use")
+	waypoint.Flags().StringVar(&p2pNetwork, "p2p.network", "", "P2P network to connect to")
+	waypoint.Flags().StringVar(&jwt, "jwt", "poop", "JWT token")
+
+	config.Read().JWT = jwt
 
 	level := os.Getenv("LOG_LEVEL")
 

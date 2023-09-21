@@ -38,6 +38,7 @@ var StartCmd = &cobra.Command{
 
 func newClient(ctx context.Context) (*client.Client, error) {
 	cfg := config.Read()
+	fmt.Println(cfg.JWT)
 
 	return client.NewClient(
 		ctx,
