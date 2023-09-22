@@ -65,7 +65,7 @@ func (v *Verifier) WithClient(ctx context.Context) *Verifier {
 	// by default, celestia-nodes run RPC on port 26658
 	rpc, err := client.NewClient(
 		ctx,
-		"http://0.0.0.0:26658", // https://docs.celestia.org/nodes/arabica-devnet/#rpc-endpoints
+		"ws://0.0.0.0:26658", // https://docs.celestia.org/nodes/arabica-devnet/#rpc-endpoints
 		cfg.JWT,
 	)
 	if err != nil {

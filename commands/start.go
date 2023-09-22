@@ -33,7 +33,7 @@ var StartCmd = &cobra.Command{
 
 		rpc, err := client.NewClient(
 			ctx,
-			"http://0.0.0.0:26658",
+			"ws://0.0.0.0:26658",
 			cfg.JWT,
 		)
 		if err != nil {
