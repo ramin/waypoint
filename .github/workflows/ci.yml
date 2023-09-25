@@ -1,10 +1,13 @@
 name: CI and Release
+
+env:
+  GO_VERSION: '1.21'
+
 on:
   merge_group:
   push:
     branches:
       - main
-    # Trigger on version tags
     tags:
       - "v*"
   pull_request:
@@ -12,14 +15,18 @@ on:
 jobs:
   go:
     uses: ./.github/workflows/go-ci.yml
+    with:
+      GO_VERSION: ${{ env.GO_VERSION }}
 
   publish:
     needs: go
     uses: ./.github/workflows/publish.yml
 
+
   release:
     name: Release
     needs: go
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
