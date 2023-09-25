@@ -2,7 +2,6 @@ package verifier
 
 import (
 	"context"
-	"fmt"
 	"os"
 	"os/signal"
 	"syscall"
@@ -10,6 +9,7 @@ import (
 
 	"github.com/celestiaorg/celestia-node/api/rpc/client"
 	"github.com/ramin/waypoint/config"
+	"github.com/sirupsen/logrus"
 )
 
 type Verifier struct {
@@ -93,7 +93,7 @@ func (v *Verifier) Start(ctx context.Context) chan bool {
 	// print out errors in background
 	go func() {
 		for err := range v.errCh {
-			fmt.Println("error", err)
+			logrus.Error("error", err)
 		}
 	}()
 	return v.done

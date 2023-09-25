@@ -17,14 +17,13 @@ func (v *Verifier) StartWriter(ctx context.Context) {
 			default:
 				for header := range v.AwaitBlock(ctx) {
 					go v.WriteToBlock(ctx, header.Height())
-					// fmt.Println(height)
 				}
 			case <-v.sig:
-				fmt.Println("Received shutdown signal")
+				logrus.Info("Received shutdown signal")
 				close(v.done)
 				return
 			case <-ctx.Done():
-				fmt.Println("Context canceled")
+				logrus.Info("Context canceled")
 				close(v.done)
 				return
 			}
@@ -33,7 +32,7 @@ func (v *Verifier) StartWriter(ctx context.Context) {
 }
 
 func (v *Verifier) AwaitBlock(ctx context.Context) <-chan *header.ExtendedHeader {
-	fmt.Println("awaiting block and writing new data")
+	logrus.Info("awaiting block and writing new data")
 
 	heights, err := v.rpc.Header.Subscribe(ctx)
 	if err != nil {
@@ -46,8 +45,8 @@ func (v *Verifier) AwaitBlock(ctx context.Context) <-chan *header.ExtendedHeader
 }
 
 func (v *Verifier) WriteToBlock(ctx context.Context, height uint64) uint64 {
-	fmt.Println("awaiting block and writing new data")
-	fmt.Println(height)
+	logrus.Info("awaiting block and writing new data")
+	logrus.Info(height)
 
 	writeBlob, err := generator.NewBlob()
 	if err != nil {
@@ -58,7 +57,7 @@ func (v *Verifier) WriteToBlock(ctx context.Context, height uint64) uint64 {
 	writeHeight, err := v.rpc.Blob.Submit(ctx, []*blob.Blob{writeBlob}, nil)
 	if err != nil {
 		v.errCh <- err
-		fmt.Println(err)
+		logrus.Info(err)
 		logrus.Error("failed to wrote blob to block ", writeHeight)
 		v.Metrics.Errors.Add(ctx, 1)
 		return writeHeight

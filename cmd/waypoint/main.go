@@ -31,7 +31,6 @@ var waypoint = &cobra.Command{
 	Version: "0.0.1",
 	Short:   "waypoint",
 	Run: func(cmd *cobra.Command, args []string) {
-
 		err := cmd.Help()
 		if err != nil {
 			panic(err)

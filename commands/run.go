@@ -2,16 +2,14 @@ package commands
 
 import (
 	"context"
-	"fmt"
 
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
 
 var RunCmd = &cobra.Command{
 	Use: "run",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("waypoint: run")
-
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
 
@@ -25,7 +23,7 @@ var RunCmd = &cobra.Command{
 			panic(err)
 		}
 
-		fmt.Println(header)
+		logrus.Info(header)
 
 		<-startServer(context.Background())
 	},

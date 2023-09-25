@@ -2,7 +2,6 @@ package server
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"os"
 
@@ -11,6 +10,7 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 
 	"github.com/gorilla/mux"
+	"github.com/sirupsen/logrus"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -69,7 +69,8 @@ func (s *Server) Start() chan bool {
 	})
 
 	if err != nil {
-		fmt.Println(err)
+		logrus.Error(err)
+		os.Exit(1)
 	}
 
 	go func() {

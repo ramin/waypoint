@@ -40,26 +40,26 @@ func (v *Verifier) PeriodicStats(ctx context.Context) {
 	for {
 		select {
 		case <-ticker.C:
-			fmt.Println(v.History.Logs)
+			logrus.Debug(v.History.Logs)
 		case <-ctx.Done():
 			return
-		case <-v.done: // listen to the done channel for termination
+		case <-v.done:
 			return
 		}
 	}
 }
 
 func (v *Verifier) verifyRecords() {
-	fmt.Println("verifying records")
+	logrus.Debug("verifying records")
 
 	for _, log := range v.History.Logs {
 
-		// fmt.Println(height)
-		// fmt.Println(log)
+		logrus.Debug(log.BlockHeight)
+		logrus.Debug(log)
 
-		fmt.Println(log.BlockHeight)
-		fmt.Println(log.Namespace)
-		// fmt.Println(log.Namespace.ID())
+		logrus.Debug(log.BlockHeight)
+		logrus.Debug(log.Namespace)
+		logrus.Debug(log.Namespace.ID())
 
 		// verify what errors come from here
 		blob, err := v.rpc.Blob.GetAll(
@@ -73,7 +73,7 @@ func (v *Verifier) verifyRecords() {
 			continue
 		}
 
-		fmt.Println(blob)
+		logrus.Debug(blob)
 
 		// assume we'll need to switch on error type here
 		if err != nil {
@@ -84,6 +84,6 @@ func (v *Verifier) verifyRecords() {
 			v.Metrics.Reads.Add(context.Background(), 1)
 		}
 
-		// delete(v.History.Logs, height)
+		delete(v.History.Logs, fmt.Sprintf("%d", log.BlockHeight))
 	}
 }

@@ -20,9 +20,6 @@ import (
 var StartCmd = &cobra.Command{
 	Use: "start",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("waypoint")
-		cfg := config.Read()
-
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
 
@@ -36,8 +33,6 @@ var StartCmd = &cobra.Command{
 			panic(err)
 		}
 
-		fmt.Println(cfg.JWT)
-
 		v.AddClient(rpc)
 
 		go v.Start(ctx)
@@ -48,7 +43,6 @@ var StartCmd = &cobra.Command{
 
 func newClient(ctx context.Context) (*client.Client, error) {
 	cfg := config.Read()
-	fmt.Println(cfg.JWT)
 
 	return client.NewClient(
 		ctx,

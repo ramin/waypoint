@@ -2,10 +2,10 @@ package commands
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/celestiaorg/celestia-node/state"
 	"github.com/ramin/waypoint/config"
+	"github.com/sirupsen/logrus"
 
 	"github.com/spf13/cobra"
 )
@@ -13,7 +13,6 @@ import (
 var InfoCmd = &cobra.Command{
 	Use: "info",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("waypoint")
 		ctx := context.Background()
 		defer ctx.Done()
 
@@ -27,14 +26,13 @@ var InfoCmd = &cobra.Command{
 			panic(err)
 		}
 
-		fmt.Println(info.Type)
-		fmt.Println(info.APIVersion)
+		logrus.Info(info.Type)
+		logrus.Info(info.APIVersion)
 
 		var address state.Address
 		err = address.UnmarshalJSON([]byte(config.Read().Address))
 		if err != nil {
-			fmt.Println(err)
-
+			logrus.Error(err)
 			return
 		}
 
@@ -42,7 +40,7 @@ var InfoCmd = &cobra.Command{
 		if err != nil {
 			panic(err)
 		}
-		fmt.Printf("Got balance: %v", balance)
+		logrus.Info("Got balance: %v", balance)
 
 	},
 }
