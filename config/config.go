@@ -26,6 +26,9 @@ type Config struct {
 
 	JWT string `mapstructure:"jwt"`
 
+	// address of light node (ie: for receiving UTIA)
+	Address string `mapstructure:"address"`
+
 	Blocks       int           `mapstructure:"blocks"`
 	Delay        time.Duration `mapstructure:"delay"`
 	Namespace    string        `mapstructure:"namespace"`

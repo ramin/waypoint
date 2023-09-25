@@ -4,10 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/celestiaorg/celestia-node/blob"
 	"github.com/celestiaorg/celestia-node/header"
 	"github.com/ramin/waypoint/generator"
-	"github.com/sirupsen/logrus"
 )
 
 func (v *Verifier) StartWriter(ctx context.Context) {
@@ -49,28 +47,33 @@ func (v *Verifier) WriteToBlock(ctx context.Context, height uint64) uint64 {
 	fmt.Println("awaiting block and writing new data")
 	fmt.Println(height)
 
-	writeBlob, err := generator.NewBlob()
+	_, err := generator.NewBlob()
 	if err != nil {
 		v.errCh <- err
 		v.Metrics.Errors.Add(ctx, 1)
 	}
 
-	writeHeight, err := v.rpc.Blob.Submit(ctx, []*blob.Blob{writeBlob}, nil)
-	if err != nil {
-		v.errCh <- err
-		// v.Metrics.Errors.Add(ctx, 1)
-	}
+	return height
 
-	logrus.Info("wrote blob to block ", writeHeight)
+	// writeHeight, err := v.rpc.Blob.Submit(ctx, []*blob.Blob{writeBlob}, nil)
+	// if err != nil {
+	// 	v.errCh <- err
+	// 	fmt.Println(err)
+	// 	logrus.Error("failed to wrote blob to block ", writeHeight)
+	// 	v.Metrics.Errors.Add(ctx, 1)
+	// 	return writeHeight
+	// }
+
+	// logrus.Info("wrote blob to block ", writeHeight)
 
 	// stick it in the history
 	// to verify later
 
-	v.History.Logs[fmt.Sprintf("%v", writeHeight)] = DataLog{
-		BlockHeight: writeHeight,
-		Namespace:   writeBlob.Namespace(),
-		Data:        writeBlob.Data,
-	}
+	// v.History.Logs[fmt.Sprintf("%v", writeHeight)] = DataLog{
+	// 	BlockHeight: writeHeight,
+	// 	Namespace:   writeBlob.Namespace(),
+	// 	Data:        writeBlob.Data,
+	// }
 
-	return writeHeight
+	// return writeHeight
 }

@@ -10,23 +10,11 @@ import (
 	"github.com/ramin/waypoint/config"
 )
 
-var (
-	address    string
-	p2pNetwork string
-	jwt        string
-)
-
 func init() {
 	log.SetOutput(os.Stdout)
 	log.SetFormatter(formatter())
 
-	waypoint.Flags().StringVar(&address, "address", "", "Address to use")
-	waypoint.Flags().StringVar(&p2pNetwork, "p2p.network", "", "P2P network to connect to")
-	waypoint.Flags().StringVar(&jwt, "jwt", "", "JWT token")
-
-	if jwt != "" {
-		config.Read().JWT = jwt
-	}
+	waypoint.PersistentFlags().StringVar(&config.Read().Address, "address", "", "Address to use")
 
 	level := os.Getenv("LOG_LEVEL")
 
@@ -43,6 +31,7 @@ var waypoint = &cobra.Command{
 	Version: "0.0.1",
 	Short:   "waypoint",
 	Run: func(cmd *cobra.Command, args []string) {
+
 		err := cmd.Help()
 		if err != nil {
 			panic(err)
@@ -53,11 +42,13 @@ var waypoint = &cobra.Command{
 func main() {
 	waypoint.AddCommand(commands.StartCmd)
 	waypoint.AddCommand(commands.RunCmd)
+	waypoint.AddCommand(commands.InfoCmd)
 
 	if err := waypoint.Execute(); err != nil {
 		log.Error(err)
 		os.Exit(1)
 	}
+
 }
 
 func formatter() log.Formatter {

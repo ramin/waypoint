@@ -62,10 +62,11 @@ func NewVerifierWithClient(ctx context.Context) (*Verifier, error) {
 
 func (v *Verifier) WithClient(ctx context.Context) *Verifier {
 	cfg := config.Read()
+
 	// by default, celestia-nodes run RPC on port 26658
 	rpc, err := client.NewClient(
 		ctx,
-		"ws://0.0.0.0:26658", // https://docs.celestia.org/nodes/arabica-devnet/#rpc-endpoints
+		"ws://0.0.0.0:26658",
 		cfg.JWT,
 	)
 	if err != nil {
@@ -87,7 +88,7 @@ func (v *Verifier) Start(ctx context.Context) chan bool {
 
 	go v.StartWriter(ctx)
 
-	go v.StartReader(ctx)
+	// go v.StartReader(ctx)
 
 	// print out errors in background
 	go func() {

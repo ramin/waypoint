@@ -31,11 +31,7 @@ var StartCmd = &cobra.Command{
 			panic(err)
 		}
 
-		rpc, err := client.NewClient(
-			ctx,
-			"ws://0.0.0.0:26658",
-			cfg.JWT,
-		)
+		rpc, err := newClient(ctx)
 		if err != nil {
 			panic(err)
 		}
