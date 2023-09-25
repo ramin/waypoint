@@ -10,10 +10,25 @@ on:
   pull_request:
 
 jobs:
+  setup:
+      runs-on: ubuntu-latest
+      inputs:
+        go-version:
+          description: 'Go version'
+          required: true
+          type: string
+          default: '1.21'
+      outputs:
+        go_version: ${{ steps.set-vars.outputs.go-version }}
+      steps:
+      - id: set-vars
+        run: echo "::set-output name=go-version::${{ inputs.go-version }}"
+
   go:
+    needs: setup
     uses: ./.github/workflows/go-ci.yml
     with:
-      go-version: 1.21
+      go-version: ${{ needs.setup.outputs.go_version }}
 
   publish:
     needs: go
@@ -29,7 +44,7 @@ jobs:
 
       - uses: actions/setup-go@v2
         with:
-          go-version: 1.21
+          go-version: ${{ needs.setup.outputs.go_version }}
 
       - uses: goreleaser/goreleaser-action@v5
         with:
