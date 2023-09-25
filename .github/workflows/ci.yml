@@ -15,13 +15,12 @@ env:
 jobs:
   go:
     uses: ./.github/workflows/go-ci.yml
-    env:
+    with:
       GO_VERSION: ${{ GO_VERSION }}
 
   publish:
     needs: go
     uses: ./.github/workflows/publish.yml
-
 
   release:
     name: Release
@@ -33,7 +32,7 @@ jobs:
 
       - uses: actions/setup-go@v2
         with:
-          go-version: 1.21
+          go-version: ${{ GO_VERSION }}
 
       - uses: goreleaser/goreleaser-action@v5
         with:
