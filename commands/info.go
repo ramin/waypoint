@@ -40,7 +40,7 @@ var InfoCmd = &cobra.Command{
 		if err != nil {
 			panic(err)
 		}
-		logrus.Info("Got balance: %v", balance)
+		logrus.Info("Got balance: ", balance)
 
 	},
 }
