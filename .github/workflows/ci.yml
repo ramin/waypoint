@@ -14,5 +14,5 @@ jobs:
     uses: ./.github/workflows/go-ci.yml
 
   publish:
-    depends-on: go
+    needs: go
     uses: ./.github/workflows/publish.yml
