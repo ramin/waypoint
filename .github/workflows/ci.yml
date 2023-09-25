@@ -15,8 +15,8 @@ env:
 jobs:
   go:
     uses: ./.github/workflows/go-ci.yml
-    with:
-      GO_VERSION: ${{ env.GO_VERSION }}
+    env:
+      GO_VERSION: ${{ GO_VERSION }}
 
   publish:
     needs: go
