@@ -12,6 +12,7 @@ type DataLog struct {
 	Namespace      share.Namespace // Namespace where data is written
 	Data           []byte          // Data blob written
 	WriteSuccess   bool            // Whether the write was successful or not
+	WrittenAt      time.Time       // Time of write
 	Retrieved      bool            // Whether the data was retrieved
 	RetrievedAt    time.Time       // Time of retrieval
 	RetrievedBlock int64           // Block at which the data was retrieved

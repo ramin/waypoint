@@ -2,7 +2,6 @@ package verifier
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"github.com/celestiaorg/celestia-node/share"
@@ -52,10 +51,16 @@ func (v *Verifier) PeriodicStats(ctx context.Context) {
 func (v *Verifier) verifyRecords() {
 	logrus.Debug("verifying records")
 
-	for _, log := range v.History.Logs {
+	for key, log := range v.History.Logs {
+		if log.Retrieved || !log.WriteSuccess {
+			delete(v.History.Logs, key)
+		}
 
-		logrus.Debug(log.BlockHeight)
-		logrus.Debug(log)
+		// only proceed to check the write after the set
+		// await duration has elapsed
+		if time.Since(log.WrittenAt) < log.Duration {
+			continue
+		}
 
 		logrus.Debug(log.BlockHeight)
 		logrus.Debug(log.Namespace)
@@ -84,6 +89,6 @@ func (v *Verifier) verifyRecords() {
 			v.Metrics.Reads.Add(context.Background(), 1)
 		}
 
-		delete(v.History.Logs, fmt.Sprintf("%d", log.BlockHeight))
+		delete(v.History.Logs, key)
 	}
 }

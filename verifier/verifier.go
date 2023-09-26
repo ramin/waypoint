@@ -2,6 +2,7 @@ package verifier
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"os/signal"
 	"syscall"
@@ -66,7 +67,7 @@ func (v *Verifier) WithClient(ctx context.Context) *Verifier {
 	// by default, celestia-nodes run RPC on port 26658
 	rpc, err := client.NewClient(
 		ctx,
-		"ws://0.0.0.0:26658",
+		fmt.Sprintf("%s:%s", cfg.Host, cfg.Port),
 		cfg.JWT,
 	)
 	if err != nil {

@@ -3,8 +3,10 @@ package verifier
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/celestiaorg/celestia-node/share"
+	"github.com/ramin/waypoint/config"
 )
 
 // History is a data structure that maintains logs and provides summary statistics.
@@ -21,6 +23,8 @@ func (bt *History) NewBlock(bh uint64, ns share.Namespace, data []byte, success 
 		Namespace:    ns,
 		Data:         data,
 		WriteSuccess: success,
+		WrittenAt:    time.Now(),
+		Duration:     config.Read().ReadInterval,
 	}
 	bt.Logs[fmt.Sprintf("%v", bh)] = bl
 }

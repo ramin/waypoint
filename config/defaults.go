@@ -3,11 +3,11 @@ package config
 import "time"
 
 const (
-	DefaultPort             = "26658"
 	DefaultHost             = "ws://0.0.0.0"
+	DefaultPort             = "26658"
 	DefaultJWT              = "use: celestia light auth admin"
 	DefaultSettingsPathName = ".waypoint"
 	DefaultMeter            = "celestia/waypoint"
-	DefaultReadInterval     = time.Second * 10
-	DefaultInfoInterval     = time.Second * 20
+	DefaultReadInterval     = 1 * time.Minute
+	DefaultInfoInterval     = 20 * time.Second
 )
