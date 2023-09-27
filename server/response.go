@@ -43,7 +43,10 @@ func (r *Response) AddError(err Error) *Response {
 
 func (r *Response) Empty() {
 	r.Writer.WriteHeader(http.StatusAccepted)
-	r.Writer.Write(nil)
+	_, err := r.Writer.Write(nil)
+	if err != nil {
+		log.Error(err)
+	}
 }
 
 func (r *Response) NotFound() {
@@ -109,7 +112,10 @@ func (r *Response) respond(header int) {
 	r.Writer.Header().Set("Content-Type", "application/json")
 
 	r.Writer.WriteHeader(header)
-	r.Writer.Write(data)
+	_, err = r.Writer.Write(data)
+	if err != nil {
+		log.Error(err)
+	}
 }
 
 type Status struct {
