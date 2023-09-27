@@ -39,7 +39,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - uses: actions/setup-go@v2
+      - uses: actions/setup-go@v4
         with:
           go-version: ${{ needs.setup.outputs.go-version }}
 
@@ -48,5 +48,6 @@ jobs:
           distribution: goreleaser
           version: latest
           args: release --clean
+
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
