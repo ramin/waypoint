@@ -57,10 +57,6 @@ func (v *Verifier) verifyRecords() {
 	logrus.Info("records to verify ", len(v.History.Logs))
 
 	for key, log := range v.History.Logs {
-		if log.Retrieved {
-			delete(v.History.Logs, key)
-		}
-
 		logrus.Debug("verifying record: ", log.BlockHeight, log.Namespace.ID())
 		logrus.Debug("log written at: ", log.WrittenAt)
 		logrus.Debug("log duration: ", log.Duration)
@@ -90,7 +86,7 @@ func (v *Verifier) verifyRecords() {
 			continue
 		}
 
-		logrus.Info("blob for height", key, " retrieved YAY")
+		logrus.Info("blob for height ", key, " retrieved YAY")
 		logrus.Debug(blob)
 
 		// assume we'll need to switch on error type here
