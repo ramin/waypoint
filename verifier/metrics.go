@@ -15,7 +15,7 @@ type Metrics struct {
 	Misses      api.Int64Counter
 	Failures    api.Int64Counter
 	Errors      api.Int64Counter
-
+	Writes      api.Int64Counter
 	// timers
 }
 
@@ -47,6 +47,12 @@ func (m *Metrics) injectCounters(meter api.Meter) error {
 	}
 
 	m.TotalBlocks = total
+
+	writes, err := meter.Int64Counter("writes", api.WithDescription("total blocks written to"))
+	if err != nil {
+		return err
+	}
+	m.Writes = writes
 
 	reads, err := meter.Int64Counter("reads", api.WithDescription("total blocks tested"))
 	if err != nil {

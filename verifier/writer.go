@@ -65,6 +65,7 @@ func (v *Verifier) WriteToBlock(ctx context.Context, height uint64) uint64 {
 		return writeHeight
 	}
 
+	v.Metrics.Writes.Add(context.Background(), 1)
 	logrus.Info("wrote blob to block ", writeHeight)
 
 	v.History.Logs[fmt.Sprintf("%v", writeHeight)] = DataLog{
