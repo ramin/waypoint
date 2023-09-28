@@ -3,9 +3,11 @@ package verifier
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/celestiaorg/celestia-node/blob"
 	"github.com/celestiaorg/celestia-node/header"
+	"github.com/ramin/waypoint/config"
 	"github.com/ramin/waypoint/generator"
 	"github.com/sirupsen/logrus"
 )
@@ -69,6 +71,8 @@ func (v *Verifier) WriteToBlock(ctx context.Context, height uint64) uint64 {
 		BlockHeight: writeHeight,
 		Namespace:   writeBlob.Namespace(),
 		Data:        writeBlob.Data,
+		WrittenAt:   time.Now(),
+		Duration:    config.Read().ReadInterval,
 	}
 
 	return writeHeight

@@ -9,8 +9,13 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+const (
+	readTick = 10 * time.Second
+)
+
 func (v *Verifier) StartReader(ctx context.Context) {
-	ticker := time.NewTicker(config.Read().ReadInterval)
+	ticker := time.NewTicker(readTick)
+	logrus.Info("starting reader with ", readTick)
 
 	defer ticker.Stop()
 
@@ -49,16 +54,22 @@ func (v *Verifier) PeriodicStats(ctx context.Context) {
 }
 
 func (v *Verifier) verifyRecords() {
-	logrus.Debug("verifying records")
+	logrus.Info("records to verify ", len(v.History.Logs))
 
 	for key, log := range v.History.Logs {
-		if log.Retrieved || !log.WriteSuccess {
+		if log.Retrieved {
 			delete(v.History.Logs, key)
 		}
+
+		logrus.Debug("verifying record: ", log.BlockHeight, log.Namespace.ID())
+		logrus.Debug("log written at: ", log.WrittenAt)
+		logrus.Debug("log duration: ", log.Duration)
+		logrus.Debug("log elapsed: ", time.Since(log.WrittenAt))
 
 		// only proceed to check the write after the set
 		// await duration has elapsed
 		if time.Since(log.WrittenAt) < log.Duration {
+			logrus.Debug("skipping record ", key, "not enough time elapsed")
 			continue
 		}
 
@@ -74,10 +85,12 @@ func (v *Verifier) verifyRecords() {
 		)
 
 		if err != nil {
+			logrus.Info("failed to read blob for height ", key, " BOO")
 			logrus.Error(err)
 			continue
 		}
 
+		logrus.Info("blob for height", key, " retrieved YAY")
 		logrus.Debug(blob)
 
 		// assume we'll need to switch on error type here

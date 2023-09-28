@@ -89,7 +89,7 @@ func (v *Verifier) Start(ctx context.Context) chan bool {
 
 	go v.StartWriter(ctx)
 
-	// go v.StartReader(ctx)
+	go v.StartReader(ctx)
 
 	// print out errors in background
 	go func() {
