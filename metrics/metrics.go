@@ -1,9 +1,6 @@
-package verifier
+package metrics
 
 import (
-	"log"
-
-	"go.opentelemetry.io/otel/exporters/prometheus"
 	api "go.opentelemetry.io/otel/metric"
 	"go.opentelemetry.io/otel/sdk/metric"
 )
@@ -20,12 +17,14 @@ type Metrics struct {
 }
 
 func NewMetrics() (*Metrics, error) {
-	exporter, err := prometheus.New()
+	exporter, err := oltphttpExporter()
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
-	provider := metric.NewMeterProvider(metric.WithReader(exporter))
-	meter := provider.Meter("celestia/waypoint")
+
+	provider := metric.NewMeterProvider(exporter)
+
+	meter := provider.Meter("celestia/node/waypoint")
 
 	m := &Metrics{}
 	err = m.injectCounters(meter)

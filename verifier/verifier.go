@@ -10,12 +10,13 @@ import (
 
 	"github.com/celestiaorg/celestia-node/api/rpc/client"
 	"github.com/ramin/waypoint/config"
+	"github.com/ramin/waypoint/metrics"
 	"github.com/sirupsen/logrus"
 )
 
 type Verifier struct {
 	History *History
-	Metrics *Metrics
+	Metrics *metrics.Metrics
 
 	checkpoint Checkpoint
 
@@ -37,7 +38,7 @@ func NewVerifier(ctx context.Context) (*Verifier, error) {
 		return nil, err
 	}
 
-	m, err := NewMetrics()
+	m, err := metrics.NewMetrics()
 	if err != nil {
 		return nil, err
 	}

@@ -18,6 +18,8 @@ func (v *Verifier) StartWriter(ctx context.Context) {
 			select {
 			default:
 				for header := range v.AwaitBlock(ctx) {
+					// grab width of data here too
+					// length of row routes (of DA header) / 2
 					go v.WriteToBlock(ctx, header.Height())
 				}
 			case <-v.sig:

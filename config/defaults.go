@@ -10,4 +10,5 @@ const (
 	DefaultMeter            = "celestia/waypoint"
 	DefaultReadInterval     = 1 * time.Minute
 	DefaultInfoInterval     = 20 * time.Second
+	DefaultExporter         = "oltphttp"
 )

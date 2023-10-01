@@ -26,6 +26,9 @@ type Config struct {
 
 	JWT string `mapstructure:"jwt"`
 
+	MetricsExporter string `mapstructure:"metricsExporter"`
+	MetricsEndpoint string `mapstructure:"metricsEndpoint"`
+
 	// address of light node (ie: for receiving UTIA)
 	Address string `mapstructure:"address"`
 
@@ -70,6 +73,7 @@ func Read() *Config {
 		viper.SetDefault("meter", DefaultMeter)
 		viper.SetDefault("readInterval", DefaultReadInterval)
 		viper.SetDefault("infoInterval", DefaultInfoInterval)
+		viper.SetDefault("metricsExporter", DefaultExporter)
 
 		_ = viper.BindEnv("jwt", "JWT")
 
@@ -83,6 +87,7 @@ func Read() *Config {
 		_ = viper.BindEnv("listen", "LISTEN")
 		_ = viper.BindEnv("meter", "METER")
 		_ = viper.BindEnv("displayInfo", "DISPLAY_INFO")
+		_ = viper.BindEnv("metricsEndpoint", "METRICS_ENDPOINT")
 
 		_ = viper.BindEnv("verbosity", "VERBOSITY")
 		_ = viper.BindEnv("logFormatter", "LOG_FORMATTER")
