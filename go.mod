@@ -1,6 +1,6 @@
 module github.com/ramin/waypoint
 
-go 1.21
+go 1.21.1
 
 require (
 	github.com/celestiaorg/celestia-node v0.11.0-rc14
