@@ -26,7 +26,7 @@ type Config struct {
 
 	JWT string `mapstructure:"jwt"`
 
-	metricsEnabled  bool   `mapstructure:"metricsEnabled"`
+	MetricsEnabled  bool   `mapstructure:"metricsEnabled"`
 	MetricsExporter string `mapstructure:"metricsExporter"`
 	MetricsEndpoint string `mapstructure:"metricsEndpoint"`
 	Meter           string `mapstructure:"meter"`
