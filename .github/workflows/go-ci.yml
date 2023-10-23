@@ -54,22 +54,23 @@ jobs:
       - name: check for diff
         run: git diff --exit-code
 
-    test:
-      name: Unit tests
-      runs-on: ubuntu-latest
+  test:
+    needs: [lint, go_mod_tidy_check]
+    name: Unit tests
+    runs-on: ubuntu-latest
 
-      steps:
-        - uses: actions/checkout@v3
+    steps:
+      - uses: actions/checkout@v3
 
-        - uses: actions/setup-go@v4
-          with:
-            go-version: ${{ inputs.go-version }}
+      - uses: actions/setup-go@v4
+        with:
+          go-version: ${{ inputs.go-version }}
 
-        - name: Run tests
-          run: go test -coverprofile=coverage.txt -covermode=atomic ./...
+      - name: Run tests
+        run: go test -coverprofile=coverage.txt -covermode=atomic ./...
 
-        - name: Upload coverage reports to Codecov
-          uses: codecov/codecov-action@v3
-          env:
-            CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
