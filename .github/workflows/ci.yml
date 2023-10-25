@@ -28,7 +28,7 @@ jobs:
   #     go-version: ${{ needs.setup.outputs.go-version }}
 
   publish:
-    needs: go
+    # needs: go
     uses: ./.github/workflows/publish.yml
 
   release:
