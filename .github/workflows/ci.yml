@@ -19,7 +19,9 @@ jobs:
       go-version: ${{ steps.set-vars.outputs.go-version }}
     steps:
       - id: set-vars
-        run: echo "go-version=${{env.GO_VERSION}}" >> "$GITHUB_OUTPUT"
+        run: |
+          echo $${{ env.GO_VERSION }}
+          echo "go-version=${{env.GO_VERSION}}" >> "$GITHUB_OUTPUT"
 
   # go:
   #   needs: setup
