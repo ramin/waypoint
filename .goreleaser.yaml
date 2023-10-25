@@ -14,12 +14,13 @@ before:
     - go generate ./...
 
 builds:
-  main: ./cmd/waypoint/
-  env:
-    - CGO_ENABLED=0
-  goos:
-    - linux
-    - darwin
+  - main:
+      - ./cmd/waypoint/
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+      - darwin
 
 archives:
   - format: tar.gz
