@@ -16,6 +16,7 @@ jobs:
       GO_VERSION: 1.21
     outputs:
       go-version: ${{ steps.set-vars.outputs.go-version }}
+
     steps:
       - id: set-vars
         run: |
@@ -34,7 +35,7 @@ jobs:
 
   release:
     name: Release
-    # needs: go
+    needs: setup
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     steps:
