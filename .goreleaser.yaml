@@ -14,8 +14,7 @@ before:
     - go generate ./...
 
 builds:
-  - main:
-      - ./cmd/waypoint/
+  - main: ./cmd/waypoint/
     env:
       - CGO_ENABLED=0
     goos:
