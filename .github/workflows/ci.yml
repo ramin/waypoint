@@ -21,19 +21,19 @@ jobs:
       - id: set-vars
         run: echo "go-version=${{env.GO_VERSION}}" >> "$GITHUB_OUTPUT"
 
-  go:
-    needs: setup
-    uses: ./.github/workflows/go-ci.yml
-    with:
-      go-version: ${{ needs.setup.outputs.go-version }}
+  # go:
+  #   needs: setup
+  #   uses: ./.github/workflows/go-ci.yml
+  #   with:
+  #     go-version: ${{ needs.setup.outputs.go-version }}
 
-  publish:
-    needs: go
-    uses: ./.github/workflows/publish.yml
+  # publish:
+  #   needs: go
+  #   uses: ./.github/workflows/publish.yml
 
   release:
     name: Release
-    needs: go
+    # needs: go
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
     steps:
@@ -48,6 +48,5 @@ jobs:
           distribution: goreleaser
           version: latest
           args: release --clean
-
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
