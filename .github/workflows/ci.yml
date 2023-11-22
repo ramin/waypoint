@@ -25,7 +25,7 @@ jobs:
       - name: Read .go-version file
         id: read-go-version
         run: |
-          echo "go-version=$(cat .go-version)" >> $GITHUB_ENV
+          echo "go-version=$(cat ./.go-version)" >> $GITHUB_ENV
 
   debug:
     needs: [setup]
