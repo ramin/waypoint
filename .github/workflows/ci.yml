@@ -43,6 +43,14 @@ jobs:
     needs: go
     uses: ./.github/workflows/publish.yml
 
+
+  debug_later:
+    needs: [go]
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo ${{ needs.setup.outputs.go-version }}
+
   release:
     name: Release
     needs: setup
