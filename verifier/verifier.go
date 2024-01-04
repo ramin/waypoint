@@ -38,9 +38,13 @@ func NewVerifier(ctx context.Context) (*Verifier, error) {
 		return nil, err
 	}
 
-	m, err := metrics.NewMetrics()
-	if err != nil {
-		return nil, err
+	var m *metrics.Metrics
+
+	if config.Read().MetricsEnabled {
+		m, err = metrics.NewMetrics()
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	return &Verifier{

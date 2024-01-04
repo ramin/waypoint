@@ -91,11 +91,15 @@ func (v *Verifier) verifyRecords() {
 
 		// assume we'll need to switch on error type here
 		if err != nil {
-			v.Metrics.Errors.Add(context.Background(), 1)
-			v.Metrics.Misses.Add(context.Background(), 1)
+			if v.Metrics != nil {
+				v.Metrics.Errors.Add(context.Background(), 1)
+				v.Metrics.Misses.Add(context.Background(), 1)
+			}
 			v.errCh <- err
 		} else {
-			v.Metrics.Reads.Add(context.Background(), 1)
+			if v.Metrics != nil {
+				v.Metrics.Reads.Add(context.Background(), 1)
+			}
 		}
 
 		delete(v.History.Logs, key)
