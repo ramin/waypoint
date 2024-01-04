@@ -41,7 +41,9 @@ func (v *Verifier) AwaitBlock(ctx context.Context) <-chan *header.ExtendedHeader
 	heights, err := v.rpc.Header.Subscribe(ctx)
 	if err != nil {
 		v.errCh <- err
-		v.Metrics.Errors.Add(ctx, 1)
+		if v.Metrics != nil {
+			v.Metrics.Errors.Add(ctx, 1)
+		}
 		panic(err)
 	}
 
@@ -55,7 +57,9 @@ func (v *Verifier) WriteToBlock(ctx context.Context, height uint64) uint64 {
 	writeBlob, err := generator.NewBlob()
 	if err != nil {
 		v.errCh <- err
-		v.Metrics.Errors.Add(ctx, 1)
+		if v.Metrics != nil {
+			v.Metrics.Errors.Add(ctx, 1)
+		}
 	}
 
 	writeHeight, err := v.rpc.Blob.Submit(ctx, []*blob.Blob{writeBlob}, nil)
@@ -63,11 +67,17 @@ func (v *Verifier) WriteToBlock(ctx context.Context, height uint64) uint64 {
 		v.errCh <- err
 		logrus.Info(err)
 		logrus.Error("failed to wrote blob to block ", writeHeight)
-		v.Metrics.Errors.Add(ctx, 1)
+
+		if v.Metrics != nil {
+			v.Metrics.Errors.Add(ctx, 1)
+		}
 		return writeHeight
 	}
 
-	v.Metrics.Writes.Add(context.Background(), 1)
+	if v.Metrics != nil {
+		v.Metrics.Writes.Add(context.Background(), 1)
+	}
+
 	logrus.Info("wrote blob to block ", writeHeight)
 
 	v.History.Logs[fmt.Sprintf("%v", writeHeight)] = DataLog{
