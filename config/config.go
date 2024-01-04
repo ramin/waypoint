@@ -75,7 +75,7 @@ func Read() *Config {
 		viper.SetDefault("infoInterval", DefaultInfoInterval)
 		viper.SetDefault("metricsExporter", DefaultExporter)
 		viper.SetDefault("metricsEndpoint", DefaultMetricsEndpoint)
-		viper.SetDefault("metricsEnabled", true)
+		viper.SetDefault("metricsEnabled", false)
 
 		_ = viper.BindEnv("jwt", "JWT")
 
