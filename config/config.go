@@ -22,6 +22,8 @@ type Config struct {
 	LogFormatter string `mapstructure:"logFormatter"`
 	Environment  string `mapstructure:"environment"`
 
+	ReadAll bool `mapstructure:"readAll"`
+
 	Listen string `mapstructure:"listen"`
 
 	JWT string `mapstructure:"jwt"`
@@ -77,6 +79,8 @@ func Read() *Config {
 		viper.SetDefault("metricsEndpoint", DefaultMetricsEndpoint)
 		viper.SetDefault("metricsEnabled", false)
 
+		viper.SetDefault("readAll", false)
+
 		_ = viper.BindEnv("jwt", "JWT")
 
 		_ = viper.BindEnv("blocks", "BLOCKS")
@@ -91,6 +95,8 @@ func Read() *Config {
 		_ = viper.BindEnv("displayInfo", "DISPLAY_INFO")
 		_ = viper.BindEnv("metricsEndpoint", "METRICS_ENDPOINT")
 		_ = viper.BindEnv("metricsEnabled", "METRICS_ENABLED")
+
+		_ = viper.BindEnv("readAll", "READ_ALL")
 
 		_ = viper.BindEnv("verbosity", "VERBOSITY")
 		_ = viper.BindEnv("logFormatter", "LOG_FORMATTER")

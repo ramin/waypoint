@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	"github.com/celestiaorg/celestia-node/blob"
 	"github.com/celestiaorg/celestia-node/share"
 	"github.com/ramin/waypoint/config"
 	"github.com/sirupsen/logrus"
@@ -73,12 +74,37 @@ func (v *Verifier) verifyRecords() {
 		logrus.Debug(log.Namespace)
 		logrus.Debug(log.Namespace.ID())
 
-		// verify what errors come from here
-		blob, err := v.rpc.Blob.GetAll(
-			context.Background(),
-			log.BlockHeight,
-			[]share.Namespace{log.Namespace},
-		)
+		var blob *blob.Blob
+		var err error
+
+		if config.Read().ReadAll {
+			blobs, err := v.rpc.Blob.GetAll(
+				context.Background(),
+				log.BlockHeight,
+				[]share.Namespace{log.Namespace},
+			)
+
+			if err == nil {
+				blob = blobs[0]
+			}
+
+		} else {
+			logrus.Info(
+				"reading blob at height ",
+				log.BlockHeight,
+				" with commitment ",
+				log.blob.Commitment,
+				" for namespace ",
+				log.Namespace,
+			)
+
+			blob, err = v.rpc.Blob.Get(
+				context.Background(),
+				log.BlockHeight,
+				log.Namespace,
+				log.blob.Commitment,
+			)
+		}
 
 		if err != nil {
 			logrus.Info("failed to read blob for height ", key, " BOO")
