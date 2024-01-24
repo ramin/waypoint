@@ -93,7 +93,7 @@ func (v *Verifier) verifyRecords() {
 				"reading blob at height ",
 				log.BlockHeight,
 				" with commitment ",
-				log.blob.Commitment,
+				log.Blob.Commitment,
 				" for namespace ",
 				log.Namespace,
 			)
@@ -102,7 +102,7 @@ func (v *Verifier) verifyRecords() {
 				context.Background(),
 				log.BlockHeight,
 				log.Namespace,
-				log.blob.Commitment,
+				log.Blob.Commitment,
 			)
 		}
 

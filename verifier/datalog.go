@@ -12,7 +12,7 @@ type DataLog struct {
 	BlockHeight    uint64          // Block height
 	Namespace      share.Namespace // Namespace where data is written
 	Data           []byte          // Data blob written
-	blob           *blob.Blob      // Blob object (so we can save commitment for single read)
+	Blob           *blob.Blob      // Blob object (so we can save commitment for single read)
 	WriteSuccess   bool            // Whether the write was successful or not
 	WrittenAt      time.Time       // Time of write
 	Retrieved      bool            // Whether the data was retrieved

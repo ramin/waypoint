@@ -84,6 +84,7 @@ func (v *Verifier) WriteToBlock(ctx context.Context, height uint64) uint64 {
 		BlockHeight: writeHeight,
 		Namespace:   writeBlob.Namespace(),
 		Data:        writeBlob.Data,
+		Blob:        writeBlob,
 		WrittenAt:   time.Now(),
 		Duration:    config.Read().ReadInterval,
 	}
