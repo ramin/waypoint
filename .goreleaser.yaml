@@ -21,6 +21,12 @@ builds:
       - linux
       - darwin
 
+release:
+  prerelease: auto
+
+git:
+  prerelease_suffix: -rc*
+
 archives:
   - format: tar.gz
     # this name template makes the OS and Arch compatible with the results of `uname`.
@@ -35,6 +41,7 @@ archives:
     format_overrides:
       - goos: windows
         format: zip
+
 signs:
   - artifacts: checksum
     args:
